@@ -125,14 +125,17 @@ func setUser(u User) error {
 	return err
 }
 
-func addProduct(prod Product) error {
+func addProduct(prod Product) (int64, error) {
 	OpenDB()
 
-	_, err := DB.Exec("INSERT INTO products (name, stock, EAN, price, box_size, image, amount, note) VALUES (?, ?, ?, ? ,?, ?, ?, ?)",
+	r, err := DB.Exec("INSERT INTO products (name, stock, EAN, price, box_size, image, amount, note) VALUES (?, ?, ?, ? ,?, ?, ?, ?)",
 		prod.Name, prod.Stock, prod.EAN, prod.Price, prod.BoxSize, prod.Image, prod.Amount, prod.Note,
 	)
+	if err != nil {
+		return 0, err
+	}
 
-	return err
+	return r.LastInsertId()
 }
 
 func setProduct(prod Product) error {

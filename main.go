@@ -38,10 +38,16 @@ func main() {
 
 	r.HandleFunc("/user/new", handleNewUserSubmit).Methods("POST")
 
-	r.HandleFunc("/api/products", handleProductsAPI).Methods("GET")
+	r.HandleFunc("/api/storage", handleProductsAPIList).Methods("GET")
+	r.HandleFunc("/api/storage/new", handleProductsAPINew).Methods("POST")
+	r.HandleFunc("/api/storage/{product}", handleProductsAPI).Methods("POST")
+
+	r.HandleFunc("/api/user/new", handleUserAPINew).Methods("POST")
+
+	r.HandleFunc("/api/user", handleUserListAPI).Methods("GET")
 
 	r.HandleFunc("/api/user/{id}", handleUserGetAPI).Methods("GET")
-	r.HandleFunc("/api/user/{id}", handleUserAPI).Methods("POST")
+	r.HandleFunc("/api/user/{id}", handleUserAPIList).Methods("POST")
 
 	r.HandleFunc("/api/user/{id}/transactions", handleTransactionAPI).Methods("GET")
 	r.HandleFunc("/api/user/{id}/transactions", handleTransactionAPIPost).Methods("POST")

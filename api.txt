@@ -4,6 +4,9 @@ API docs
   	if res.error != "" -> errortext
   	res.uuid -> uuid written
 
+  y GET /api/user
+  	{[]User} | err
+
   y GET /api/user/<id>
   	type User struct {
 		ID       int       `json:"id"`
@@ -14,12 +17,19 @@ API docs
 	}
 
 
+  POST /api/user/new
+  	y User (ID value is ignored)
+  	-> 201 {user:User, info} | err
+
   POST /api/user/<user id>
     y {action:"buy",product:<id>} -> {error:"errtext"} || {"info":"text"}
     y {action:"deposit",amount:<amt>} -> {error:"errtext"} || {"info":"text"}
     y {action:"withdraw",amount:<amt>} -> {error:"errtext"} || {"info":"text"}
     	AMT IS IN CENTS
 
+    y {action:"update",User:User} -> {error:"errtext"} || {"info":"text"}
+		-> {info:"text",user:User}
+	
 	type Transaction struct {
 		ID      int
 		Value   int
@@ -45,6 +55,14 @@ API docs
 		Image   uuid.UUID `json:"image"`
 		Note    string    `json:"note"`
 	}
-	y GET /api/products
-		{action:"list"} -> products:[]Product | err
-		
+	y GET /api/storage
+		-> products:[]Product | err
+
+	y POST /api/storage/new
+		{Product} -> {info:"text",product:Product} | err
+
+	y POST /api/storage/<productid>
+		{action:"stock",amount:3}
+	 -> {product:product,info:"text"} | err
+
+		{action:"delete"} -> info | err

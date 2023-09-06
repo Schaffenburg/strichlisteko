@@ -29,7 +29,7 @@ func handleNewProductSubmit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = addProduct(prod)
+	id, err := addProduct(prod)
 	if err != nil {
 		log.Printf("Failed to add product: %s", err)
 
@@ -41,7 +41,7 @@ func handleNewProductSubmit(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
-	fmt.Fprint(w, `{"info":"success."}`)
+	fmt.Fprintf(w, `{"info":"success, created with id %d"}`, id)
 	return
 }
 

@@ -9,3 +9,5 @@ Einfache strichliste geschrieben in go und html.
 TODO:
 
 - api docs
+- cleanup code
+  - rewrite api and stuffs
