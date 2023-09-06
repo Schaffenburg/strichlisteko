@@ -186,6 +186,26 @@ func handleUserGetAPI(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleUsersAPI(w http.ResponseWriter, r *http.Request) {
+
+	users, err := getUsers(true)
+	if err != nil {
+		log.Printf("failed to get users '%s'", err)
+		errAPI(404, "User Not Found", w, r)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	enc := json.NewEncoder(w)
+	err = enc.Encode(users)
+	if err != nil {
+		log.Printf("Failed to encode users %s", err)
+		errAPI(500, "failed to encode response", w, r)
+	}
+}
+
 func handleTransactionAPI(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idstr, ok := vars["id"]

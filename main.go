@@ -13,6 +13,8 @@ func init() {
 
 func main() {
 	r := mux.NewRouter()
+
+	r.Use(accessControlMiddleware)
 	r.HandleFunc("/", handleUsersList).Methods("GET")
 	r.HandleFunc("/inactive", handleUsersListInactive).Methods("GET")
 
@@ -39,7 +41,10 @@ func main() {
 	r.HandleFunc("/user/new", handleNewUserSubmit).Methods("POST")
 
 	r.HandleFunc("/api/products", handleProductsAPI).Methods("GET")
+	r.HandleFunc("/api/products/new", handleNewProductSubmit).Methods("POST")
 
+	r.HandleFunc("/api/users", handleUsersAPI).Methods("GET")
+	r.HandleFunc("/api/user/new", handleNewUserSubmit).Methods("POST")
 	r.HandleFunc("/api/user/{id}", handleUserGetAPI).Methods("GET")
 	r.HandleFunc("/api/user/{id}", handleUserAPI).Methods("POST")
 
@@ -68,4 +73,13 @@ func main() {
 
 	log.Println("Listening on :8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
+}
+
+// access control and  CORS middleware
+func accessControlMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+		next.ServeHTTP(w, r)
+	})
 }

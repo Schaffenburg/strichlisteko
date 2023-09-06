@@ -24,6 +24,8 @@ func handleNewProductSubmit(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Failed to decode user json: %s", err)
 
 		w.Header().Set("Content-Type", "application/json")
+		//Add cors header (update allowed locs lateron)
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.WriteHeader(400)
 		fmt.Fprint(w, `{"error":"invalid argument"}`)
 		return
@@ -34,12 +36,16 @@ func handleNewProductSubmit(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Failed to add product: %s", err)
 
 		w.Header().Set("Content-Type", "application/json")
+		//Add cors header (update allowed locs lateron)
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.WriteHeader(500)
 		fmt.Fprint(w, `{"error":"database failure"}`)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	//Add cors header (update allowed locs lateron)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(200)
 	fmt.Fprint(w, `{"info":"success."}`)
 	return
