@@ -7,7 +7,7 @@ export default class Product {
     public imageId :string = "";
     public stock :number = 0;
     public ean :string;
-    public price :number = 0;
+    private price :number = 0;
     public boxSize :number = 0;
     public amount :string = "none";
     public note :string = "";
@@ -22,6 +22,10 @@ export default class Product {
         this.boxSize=boxSize;
         this.amount=amount;
         this.note=note;
+    }
+
+    getPrice(){
+        return this.price/100;
     }
 
     /**
@@ -40,6 +44,16 @@ export default class Product {
         return []
     }
 
+    public async buy(userId:number){
+        const api = new Api();
+        const resp = await api.buyProduct(userId,this.id);
+        if(resp.data){
+            if(resp.data.info){
+                return true
+            }
+        }
+        return false;
+    }
 
 
 

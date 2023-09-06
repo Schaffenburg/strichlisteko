@@ -15,13 +15,13 @@
 
         <div class="text-white">
           <div class="pt-2 flex justify-end text-2xl font-semibold">
-            {{ cData.product.price.toFixed(2) }}€
+            {{ cData.product.getPrice().toFixed(2) }}€
           </div>
         </div>
       </div>
     </Container>
   </div>
-  <div class="w-full px-6">
+  <div class="w-full px-6 pb-10">
     <Container class="bg-lgray-800 mx-auto max-w-5xl mt-4">
       <transition appear name="fade" mode="out-in">
         <div v-if="cData.loading" class="flex items-center justify-center w-full">
@@ -32,8 +32,8 @@
             <div class="text-center text-2xl font-semibold">
               Scan Card
             </div>
-            <div class="text-center text-6xl">
-              <i class="ri-base-station-line"></i>
+            <div class="">
+              <qrcode-stream style="height: 50vh" :track="paintQr" @detect="qrDetected"></qrcode-stream>
             </div>
 
             <div class="flex w-full items-center">
@@ -62,7 +62,6 @@
                         {{ user.getBalance().toFixed(2) }}€
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -133,6 +132,7 @@ import Product from "@/source/models/Product";
 import User from "@/source/models/User";
 import Spinner from "@/components/Spinner.vue";
 import {useRouter} from "vue-router";
+import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
 
 const router = useRouter();
 const store = useStore()
@@ -180,10 +180,23 @@ function selectUser(user: User) {
   cData.flowStep = 1;
 }
 
+function qrDetected(content){
+  console.log(content)
+  let val = parseInt(content[0].rawValue);
+  if(!isNaN(val)&&cData.users){
+    for(const user of cData.users){
+      if(user.id===val){
+        return selectUser(user);
+      }
+    }
+  }
+}
+
 async function checkout(account: boolean) {
   //TODO send stuff to api
   if (account) {
-    //a
+    //@ts-ignore
+    await cData.product?.buy(cData.selectedUser?.id)
   } else {
 //a
   }
@@ -198,6 +211,46 @@ function homeRedirect() {
     router.push({name: 'home'})
   }
 }
+
+
+function paintQr(detectedCodes, ctx) {
+//bounding box
+  for (const detectedCode of detectedCodes) {
+    const [firstPoint, ...otherPoints] = detectedCode.cornerPoints
+
+    ctx.strokeStyle = 'red'
+
+    ctx.beginPath()
+    ctx.moveTo(firstPoint.x, firstPoint.y)
+    for (const { x, y } of otherPoints) {
+      ctx.lineTo(x, y)
+    }
+    ctx.lineTo(firstPoint.x, firstPoint.y)
+    ctx.closePath()
+    ctx.stroke()
+  }
+  //paint text
+  for (const detectedCode of detectedCodes) {
+    const { boundingBox, rawValue } = detectedCode
+
+    const centerX = boundingBox.x + boundingBox.width / 2
+    const centerY = boundingBox.y + boundingBox.height / 2
+
+    const fontSize = Math.max(12, (50 * boundingBox.width) / ctx.canvas.width)
+    //console.log(boundingBox.width, ctx.canvas.width)
+
+    ctx.font = `bold ${fontSize}px sans-serif`
+    ctx.textAlign = 'center'
+
+    ctx.lineWidth = 3
+    ctx.strokeStyle = '#35495e'
+    ctx.strokeText(detectedCode.rawValue, centerX, centerY)
+
+    ctx.fillStyle = '#5cb984'
+    ctx.fillText(rawValue, centerX, centerY)
+  }
+}
+
 
 </script>
 

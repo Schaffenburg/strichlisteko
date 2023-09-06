@@ -26,7 +26,7 @@
                     </div>
                   </div>
                   <div class="pt-2 flex justify-end text-lg font-semibold">
-                    {{product.price.toFixed(2)}}€
+                    {{product.getPrice().toFixed(2)}}€
                   </div>
                 </div>
 

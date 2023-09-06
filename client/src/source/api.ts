@@ -20,4 +20,8 @@ export default class Api{
     public getAllUsers(){
         return this.Get('/users');
     }
+
+    public buyProduct(userId:number,productId:number){
+        return this.Post('/user/'+userId,{action:"buy",product:productId});
+    }
 }

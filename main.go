@@ -47,6 +47,7 @@ func main() {
 	r.HandleFunc("/api/user/new", handleNewUserSubmit).Methods("POST")
 	r.HandleFunc("/api/user/{id}", handleUserGetAPI).Methods("GET")
 	r.HandleFunc("/api/user/{id}", handleUserAPI).Methods("POST")
+	r.HandleFunc("/api/user/{id}", PreflightRoot).Methods("OPTIONS")
 
 	r.HandleFunc("/api/user/{id}/transactions", handleTransactionAPI).Methods("GET")
 	r.HandleFunc("/api/user/{id}/transactions", handleTransactionAPIPost).Methods("POST")
@@ -82,4 +83,9 @@ func accessControlMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func PreflightRoot(respWriter http.ResponseWriter, request *http.Request) {
+	respWriter.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+	respWriter.Header().Set("Access-Control-Allow-Headers", "*")
 }

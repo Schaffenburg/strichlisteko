@@ -17,7 +17,8 @@ export default class User {
     }
 
     public getBalance(){
-        return this.balance;
+        //The api uses cents, whyyy >:c
+        return this.balance/100;
     }
 
     public async buyProductId(productId:number){
