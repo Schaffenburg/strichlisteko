@@ -1,0 +1,39 @@
+.card > a:link {
+      text-decoration: none;
+
+      color: inherit;
+}
+
+.card > a:visited {
+      text-decoration: none;
+
+      color: inherit;
+}
+
+.card > a:hover {
+      text-decoration: none;
+
+      color: inherit;
+}
+
+.card > a:active {
+      text-decoration: none;
+
+      color: inherit;
+}
+
+.usercard {
+	width: calc(13em/3);
+	font-size: 3em;
+	margin: 10px;
+	justify-content: center;
+	text-align: center;
+}
+
+.hovercard {
+	 background-color: lightslategray
+}
+
+.hovercard:hover {
+	background-color: #006feb;
+}

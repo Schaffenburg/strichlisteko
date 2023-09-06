@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strichliste v2</title>
+    <link rel="stylesheet" href="/s/style/bs-icons/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/s/style/bs/css/bootstrap.css">
+    <link rel="stylesheet" href="/s/style/style.css">
+
+    <script src="/s/js/jq.js"></script>
+    <script>    
+        function submit() {
+        			let data = {
+        				username: $('#username')[0].value,
+        				image: $('#imguuid')[0].value,
+        				
+        				active: true,
+        			}
+        	
+        	    	let formData = JSON.stringify(data);
+        
+        			console.log("sending", formData)	    	
+        
+        			$.ajax({
+        			  type: "POST",
+        			  url: "/user/new",
+        			  data: formData,
+        			  success: console.log,
+        			  dataType: "json",
+        			  contentType: "application/json",
+        			}).fail((data) => {
+        				if(data.responseJSON.error) {
+        					console.log("error from API:", data.responseJSON.error)
+        				} else {
+        					console.log("network error")					
+        				}
+        			}).done(data => { // json data: contains info string and id int
+        				res = data
+        
+        				console.log("success from API", data.info)
+        
+        				window.location = `/user/${data.id}`
+        			})
+        		}
+    </script>
+</head>
+
+<body class="dark-mode">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" style="padding-left: 5em; font-size: 1.1em" href="/">Strichliste - </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="justify-content: right;">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item" style="font-weight: bold; font-size: 1.2em; padding-left: 0.5em; padding-right:0.5em;">
+                    <a class="nav-link" href="#"><i class="bi bi-basket-fill"></i> Produktliste</a>
+                </li>
+                <li class="nav-item" style="font-weight: bold; font-size: 1.2em; padding-left: 0.5em; padding-right:0.5em;">
+                    <a class="nav-link" href="#"><i class="bi bi-box-fill"></i> Lager</a>
+                </li>
+                <li class="nav-item" style="font-weight: bold; padding-right: 5em; font-size: 1.2em; padding-left: 0.5em;">
+                    <a class="nav-link" href="#"><i class="bi bi-moon-stars"></i> Inaktive Nutzer</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container d-flex flex-wrap" style="justify-content: left;">
+        <h1 style="padding: 0.4em">User hinzufuegen:</h1>
+    </div>
+    <div class="container d-flex flex-wrap" style="justify-content: center;">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="username" placeholder="Username">
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="imguuid" placeholder="Bild UUID">
+
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" onclick="window.location = '/user/new/imgselector?/user/new?'">Auswahl</button>
+            </div>
+        </div>
+
+        <div class="input-group mb-3">
+	    	<button class="btn btn-outline-secondary" type="button" onclick="submit()">Erstellen</button>
+	    </div>
+    </div>
+
+    <script>
+    		$("#imguuid")[0].value = location.search.substr(1)
+	</script>
+</body>
+</html>

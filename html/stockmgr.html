@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strichliste v2</title>
+    <link rel="stylesheet" href="/s/style/bs-icons/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/s/style/bs/css/bootstrap.css">
+    <link rel="stylesheet" href="/s/style/style.css">
+
+    <script src="/s/js/jq.js"></script>
+
+    <script>
+    	function submit_new() {
+      			let data = {
+						name: $("#name")[0].value,
+						stock: parseInt($("#stock")[0].value),
+						EAN: $("#ean")[0].value,
+						price: Math.floor(parseFloat($("#price")[0].value)*100),
+						box_size: parseInt($("#box_size")[0].value),
+						amount: $("#amount")[0].value
+           			}
+        	
+        	    	let formData = JSON.stringify(data);
+        
+        			console.log("sending", formData)	    	
+        
+        			$.ajax({
+        			  type: "POST",
+        			  url: "/storage/new",
+        			  data: formData,
+        			  success: console.log,
+        			  dataType: "json",
+        			  contentType: "application/json",
+        			}).fail((data) => {
+        				if(data.responseJSON.error) {
+        					console.log("error from API:", data.responseJSON.error)
+        				} else {
+        					console.log("network error")					
+        				}
+        			}).done(data => { // json data: contains info string and id int
+        				res = data
+        
+        				console.log("success from API:", data.info)
+
+						// reload        
+        				window.location = window.location
+        			})
+        		}
+      </script>
+</head>
+
+<body class="dark-mode">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" style="padding-left: 5em; font-size: 1.1em" href="/">Strichliste - </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="justify-content: right;">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"
+                    style="font-weight: bold; font-size: 1.2em; padding-left: 0.5em; padding-right:0.5em;">
+                    <a class="nav-link" href="/"><i class="bi bi-basket-fill"></i> Produktliste</a>
+                </li>
+                <li class="nav-item"
+                    style="font-weight: bold; font-size: 1.2em; padding-left: 0.5em; padding-right:0.5em;">
+                    <a class="nav-link" href="/storage"><i class="bi bi-box-fill"></i> Lager</a>
+                </li>
+                <li class="nav-item"
+                    style="font-weight: bold; padding-right: 5em; font-size: 1.2em; padding-left: 0.5em;">
+                    <a class="nav-link" href="/inactive"><i class="bi bi-moon-stars"></i> Inaktive Nutzer</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container d-flex flex-wrap" style="justify-content: center;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Vorrat</th>
+                    <th scope="col">Menge</th>
+                    <th scope="col">EAN</th>
+                    <th scope="col">Preis</th>
+                    <th scope="col">Kastengroesse</th>
+                    <th scope="col" style="width: 22em;">Bestand</th>
+                    <th scope="col" style="width: 3em"></th>
+                </tr>
+            </thead>
+            <tbody>
+            	{{ range . }}
+                <tr>
+                    <th scope="row">{{ .ID }}</th>
+                    <td>{{ .Name }}</td>
+                    <td>{{ .Stock }} stk.</td>
+                    <td>{{ .Amount }}</td>
+                    <td>{{ .EAN }}</td>
+                    <td>{{ .PriceString }}</td>
+                    <td>{{ .BoxSize }} stk.</td>
+                    <td>
+                        <button class="btn btn-danger" type="button" onclick="window.location = '/storage/{{ .ID }}/stock/-1'">- 1 stk.</button>
+                        <button class="btn" style="background-color:greenyellow;" type="button"  onclick="window.location = '/storage/{{ .ID }}/stock/1'">+ 1 stk.</button>
+                        <button class="btn" style="background-color:#16bc9e;" type="button"  onclick="window.location = '/storage/{{ .ID }}/stock/5'">+ 5 stk.</button>
+                        <button class="btn btn-warning" type="button"  onclick="window.location = '/storage/{{ .ID }}/stock/{{ .BoxSize }}'">+ {{ .BoxSize }} stk.</button>
+                    </td>
+                    <td>
+						<div style="width: 6em">
+                        <button class="btn btn-secondary" type="button" onclick="window.location = '/user/new/imgselector?/storage/{{ .ID }}/setimg/'">
+                        	<i class="bi bi-card-image" title="Bild auswaelen"></i>
+                        </button>
+                        <button class="btn btn-danger" type="button" onclick="window.location = '/confirm?storage/{{ .ID }}/delete'">
+                        	<i class="bi bi-trash3" title="Artikel Loeschen"></i>
+                        </button>
+                        </div>
+                    </td>
+                </tr>
+                {{ end }}
+                <tr>
+                    <th scope="row">#</th>
+                    <td>
+                        <input type="text" id="name" class="form-control">
+                    </td>
+                    <td>
+                        <input type="number" id="stock" class="form-control" style="max-width: 6em">
+                    </td>
+                    <td>
+                        <input type="text" id="amount" class="form-control" placeholder="1/2 L" style="max-width: 6em">
+                    </td>
+                    <td>
+                        <input type="text" id="ean" class="form-control" style="max-width: 10em;">
+                    </td>
+                    <td>
+                        <input type="number" id="price" class="form-control">
+                    </td>
+                    <td>
+                        <input type="number" id="box_size" class="form-control" style="max-width: 6em;">
+                    </td>
+                    <td>
+                        <button class="btn btn-success" type="button" onclick="submit_new()">Hinzufuegen</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+API docs
+  y GET /img/<uuid> -> returns img
+  y PUT /img/upload -> upload image; returns status msg (201 on success)
+  	if res.error != "" -> errortext
+  	res.uuid -> uuid written
+
+  y GET /api/user/<id>
+  	type User struct {
+		ID       int       `json:"id"`
+		Username string    `json:"username"`
+		Image    uuid.UUID `json:"image"`
+		Balance  int       `json:"balance"`
+		Active   bool      `json:"active"`
+	}
+
+
+  POST /api/user/<user id>
+    y {action:"buy",product:<id>} -> {error:"errtext"} || {"info":"text"}
+    y {action:"deposit",amount:<amt>} -> {error:"errtext"} || {"info":"text"}
+    y {action:"withdraw",amount:<amt>} -> {error:"errtext"} || {"info":"text"}
+    	AMT IS IN CENTS
+
+	type Transaction struct {
+		ID      int
+		Value   int
+		Product string
+		UserID  int
+		Time    time.Time
+		Undone  bool
+	}
+	GET /api/user/<id>/transactions
+	  -> []Transaction
+
+	POST /api/user/<id>/transactions
+		y {action:"undo","transaction":<id>} -> {error:"errtext"} || {"info":"text"}
+	
+	type Product struct {
+		ID      int       `json:"id"`
+		Name    string    `json:"name"`
+		Stock   int       `json:"stock"`
+		EAN     string    `json:"EAN"`
+		Price   int       `json:"price"`
+		BoxSize int       `json:"box_size"`
+		Amount  string    `json:"amount"`
+		Image   uuid.UUID `json:"image"`
+		Note    string    `json:"note"`
+	}
+	y GET /api/products
+		{action:"list"} -> products:[]Product | err
+		

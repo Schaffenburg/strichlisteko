@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strichliste v2</title>
+    <link rel="stylesheet" href="/s/style/bs-icons/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/s/style/bs/css/bootstrap.css">
+    <link rel="stylesheet" href="/s/style/style.css">
+
+    <script src="/s/js/jq.js"></script>
+</head>
+
+<body class="dark-mode">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" style="padding-left: 5em; font-size: 1.1em" href="/">Strichliste von
+            <i style="font-size: 2em; color: {{ .BalColor }}; padding: 0.2em">{{ .Username }}</i>
+            Wat hast de'?
+            <span style="color: {{ .BalColor }}; font-size: 2em; padding: 0.2em">{{ .BalanceString }}</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="justify-content: right;">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"
+                    style="font-weight: bold; font-size: 1.2em; padding-left: 0.5em; padding-right:0.5em;">
+                    <a class="nav-link" href="/user/{{ .ID }}/wallet"><i class="bi bi-currency-euro"></i> Ein/Auszahlen</a>
+                </li>
+                <li class="nav-item"
+                    style="font-weight: bold; font-size: 1.2em; padding-left: 0.5em; padding-right:0.5em;">
+                    <a class="nav-link" href="/user/{{ .ID }}/transactions"><i class="bi bi-clock-history"></i> Zahlungsverlauf</a>
+                </li>
+                <li class="nav-item"
+                    style="font-weight: bold; padding-right: 5em; font-size: 1.2em; padding-left: 0.5em;">
+                    <a class="nav-link" href="/user/{{ .ID }}/settings"><i class="bi bi-pencil-square"></i> Einstellungen</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container d-flex flex-wrap" style="justify-content: left;">
+    	<h1 style="padding: 0.4em">Ein / Auszahlen:</h1>
+    </div>
+    <div class="container d-flex flex-wrap" style="justify-content: center;">
+		<div>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="window.location = '/user/{{ .ID }}/wallet/deposit/100'">+ 1.00</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="window.location = '/user/{{ .ID }}/wallet/deposit/200'">+ 2.00</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="window.location = '/user/{{ .ID }}/wallet/deposit/500'">+ 5.00</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="window.location = '/user/{{ .ID }}/wallet/deposit/1000'">+ 10.00</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="window.location = '/user/{{ .ID }}/wallet/deposit/2000'">+ 20.00</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="window.location = '/user/{{ .ID }}/wallet/deposit/5000'">+ 50.00</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" style="text-align: center;">
+                            <div class="input-group mb-3">
+                                <!-- Button 1 -->
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-success" type="button" onclick="window.location = '/user/{{ .ID }}/wallet/deposit/' + parseFloat($('#custom')[0].value.replace(',','.'))*100">
+                                        <i class="bi bi-plus-square-fill"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Input Field -->
+                                <input type="text" id="custom" style="text-align: right;" class="form-control" placeholder="Eigener Betrag">
+                                <span class="input-group-text">€</span>
+
+                                <!-- Button 2 -->
+                                <div class="input-group-append">
+                                    <button class="btn btn-danger" type="button" onclick="window.location = '/user/{{ .ID }}/wallet/withdraw/' + parseFloat($('#custom')[0].value.replace(',', '.'))*100">
+                                        <i class="bi bi-dash-square-fill"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="window.location = '/user/{{ .ID }}/wallet/withdraw/100'">- 1.00</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="window.location = '/user/{{ .ID }}/wallet/withdraw/200'">- 2.00</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="window.location = '/user/{{ .ID }}/wallet/withdraw/500'">- 5.00</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="window.location = '/user/{{ .ID }}/wallet/withdraw/1000'">- 10.00</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="window.location = '/user/{{ .ID }}/wallet/withdraw/2000'">- 20.00</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="window.location = '/user/{{ .ID }}/wallet/withdraw/5000'">- 50.00</button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</body>
+
+</html>

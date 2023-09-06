@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strichliste v2</title>
+    <link rel="stylesheet" href="/s/style/bs-icons/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/s/style/bs/css/bootstrap.css">
+    <link rel="stylesheet" href="/s/style/style.css">
+
+    <script src="/s/js/jq.js"></script>
+</head>
+
+<body class="dark-mode">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" style="padding-left: 5em; font-size: 1.1em" href="/">
+        	Strichliste
+		</a>
+        <span style="color: white; margin-left: 0">von</span>
+        <a href="/user/{{ .User.ID }}">
+        	<i style="font-size: 2em; color: {{ .User.BalColor }}; padding: 0.2em">{{ .User.Username }}</i>
+	    </a>
+        <span style="color: white">Wat hast de'?</span>
+
+        <span style="color: {{ .User.BalColor }}; font-size: 2em; padding: 0.2em">{{ .User.BalanceString }}</span>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="justify-content: right;">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"
+                    style="font-weight: bold; font-size: 1.2em; padding-left: 0.5em; padding-right:0.5em;">
+                    <a class="nav-link" href="/user/{{ .User.ID }}/wallet"><i class="bi bi-currency-euro"></i> Ein/Auszahlen</a>
+                </li>
+                <li class="nav-item"
+                    style="font-weight: bold; font-size: 1.2em; padding-left: 0.5em; padding-right:0.5em;">
+                    <a class="nav-link" href="/user/{{ .User.ID }}/transactions"><i class="bi bi-clock-history"></i> Zahlungsverlauf</a>
+                </li>
+                <li class="nav-item"
+                    style="font-weight: bold; padding-right: 5em; font-size: 1.2em; padding-left: 0.5em;">
+                    <a class="nav-link" href="/user/{{ .User.ID }}/settings"><i class="bi bi-pencil-square"></i> Einstellungen</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+	{{ if $.User.BalanceNeg5 }}
+	    <div class="container d-flex flex-wrap" style="justify-content: center; padding: 1em">
+				<h1>Psssst dein Konto ist im Minus, fuell es wieder auf! Mach mal hinne 😁!</h1>
+		</div>
+	{{ end }}
+    <div class="container d-flex flex-wrap" style="justify-content: center;">
+		{{ range $p := .Products }}
+        <div class="card rounded hovercard" style="margin: 10px; width: 10em;">
+        	<a href="/user/{{ $.User.ID }}/buy/{{ $p.ID }}">
+	        
+	            <img src="/img/{{ $p.Image }}" class="card-img-top rounded" alt="Image 1">
+	            <div class="card-body" style="padding: 0.25em">
+	                <span>
+	                    <h5 class="card-title" style="height: 2em">
+	                        <center>
+	                            {{ $p.Name }}
+	                        </center>
+	                        <div style="width: 100%; height: 0.1em; background-color: black;"></div>
+	                        <div style="width: 100%;"></div>
+	                        <span style="left: 0; position: absolute; padding-left: 0.8em;">
+	                            {{ $p.Amount }}
+	                        </span>
+	                        <span style="right: 0; position: absolute; padding-right: 0.8em;">
+	                            {{ $p.PriceString }}
+	                        </span>
+	                    </h5>
+	                </span>
+	            </div>
+			</a>
+        </div>
+        {{ end }}
+    </div>
+</body>
+
+</html>
