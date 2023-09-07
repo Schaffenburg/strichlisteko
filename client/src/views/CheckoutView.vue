@@ -32,8 +32,8 @@
             <div class="text-center text-2xl font-semibold">
               Scan Card
             </div>
-            <div class="">
-              <qrcode-stream style="height: 50vh" :track="paintQr" @detect="qrDetected"></qrcode-stream>
+            <div class="flex items-center justify-center">
+              <qrcode-stream style="height: 50vh; width: 50vh" :track="paintQr" @detect="qrDetected"></qrcode-stream>
             </div>
 
             <div class="flex w-full items-center">
