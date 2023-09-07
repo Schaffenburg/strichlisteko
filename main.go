@@ -13,6 +13,8 @@ func init() {
 
 func main() {
 	r := mux.NewRouter()
+
+	r.Use(accessControlMiddleware)
 	r.HandleFunc("/", handleUsersList).Methods("GET")
 	r.HandleFunc("/inactive", handleUsersListInactive).Methods("GET")
 
@@ -48,6 +50,7 @@ func main() {
 
 	r.HandleFunc("/api/user/{id}", handleUserGetAPI).Methods("GET")
 	r.HandleFunc("/api/user/{id}", handleUserAPIList).Methods("POST")
+	r.HandleFunc("/api/user/{id}", PreflightRoot).Methods("OPTIONS")
 
 	r.HandleFunc("/api/user/{id}/transactions", handleTransactionAPI).Methods("GET")
 	r.HandleFunc("/api/user/{id}/transactions", handleTransactionAPIPost).Methods("POST")
@@ -74,4 +77,18 @@ func main() {
 
 	log.Println("Listening on :8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
+}
+
+// access control and  CORS middleware
+func accessControlMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func PreflightRoot(respWriter http.ResponseWriter, request *http.Request) {
+	respWriter.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+	respWriter.Header().Set("Access-Control-Allow-Headers", "*")
 }
