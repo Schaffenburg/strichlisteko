@@ -29,22 +29,25 @@
                  src="https://picsum.photos/600">
           </td>
           <td class="px-2">
-            {{ product.name }}
+            <input type="text" class="min-w-0 w-full" v-model="product.name" @change="productChanged(product)">
           </td>
           <td class="px-2">
-            {{ product.stock }}
+            <input type="text" class="min-w-0 w-full" v-model="product.stock">
           </td>
           <td class="px-2">
-            {{ product.amount }}
+            <input type="text" class="min-w-0 w-full" v-model="product.amount">
           </td>
           <td class="px-2">
-            {{ product.ean }}
+            <input type="text" class="min-w-0 w-full" v-model="product.ean">
           </td>
           <td class="px-2">
-            {{ product.getPrice().toFixed(2) }}€
+            <div class="flex items-center justify-center">
+              <input type="text" class="min-w-0 w-full mr-1" v-model="product.price">
+              <div>ct</div>
+            </div>
           </td>
           <td class="px-2">
-            {{ product.boxSize }}
+            <input type="text" class="min-w-0 w-full" v-model="product.boxSize">
           </td>
           <td class="px-2 flex gap-2 min-w-[200px]">
             <div class="grid grid-cols-3 gap-2">
@@ -82,7 +85,7 @@
           <td class="px-2">
           </td>
           <td class="px-2">
-            <input type="text" class="min-w-0 w-full">
+            <input type="file" accept="image/jpeg, image/png" class="min-w-0 w-full">
           </td>
           <td class="px-2">
             <input type="text" class="min-w-0 w-full">
@@ -91,16 +94,16 @@
             <input type="text" class="min-w-0 w-full">
           </td>
           <td class="px-2">
-            <input type="number" class="min-w-0 w-full">
+            <input type="number" step="1" class="min-w-0 w-full">
           </td>
           <td class="px-2">
             <input type="text" class="min-w-0 w-full">
           </td>
           <td class="px-2">
-            <input type="number" class="min-w-0 w-full">
+            <input type="number" step="1" class="min-w-0 w-full">
           </td>
           <td class="px-2">
-            <input type="number" class="min-w-0 w-full">
+            <input type="number" step="1" class="min-w-0 w-full">
           </td>
           <td class="px-2 flex gap-2">
               <Button class="bg-green-500 hover:bg-green-600 active:bg-green-700 my-3">
@@ -152,6 +155,10 @@ async function loadProducts() {
 const store = useStore();
 const router = useRouter();
 
+
+function productChanged(product:Product){
+  
+}
 
 </script>
 

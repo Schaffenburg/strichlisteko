@@ -509,6 +509,26 @@ type ProductAPIRequest struct {
 }
 
 func handleProductsAPI(w http.ResponseWriter, r *http.Request) {
+	products, err := getProducts()
+	if err != nil {
+		log.Printf("failed to get products: %s", err)
+		errAPI(500, "General Failure", w, r)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	enc := json.NewEncoder(w)
+	err = enc.Encode(products)
+	if err != nil {
+		log.Printf("Failed to encode response: %s", err)
+		errAPI(500, "failed to encode response", w, r)
+		return
+	}
+}
+
+func handleProductAPI(w http.ResponseWriter, r *http.Request) {
 	req := new(ProductAPIRequest)
 
 	dec := json.NewDecoder(r.Body)

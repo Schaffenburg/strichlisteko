@@ -42,11 +42,15 @@ func main() {
 
 	r.HandleFunc("/api/storage", handleProductsAPIList).Methods("GET")
 	r.HandleFunc("/api/storage/new", handleProductsAPINew).Methods("POST")
-	r.HandleFunc("/api/storage/{product}", handleProductsAPI).Methods("POST")
+	r.HandleFunc("/api/storage/new", PreflightRoot).Methods("OPTIONS")
+	r.HandleFunc("/api/storage/{product}", handleProductAPI).Methods("POST")
+	r.HandleFunc("/api/storage/{product}", PreflightRoot).Methods("OPTIONS")
+
+	r.HandleFunc("/api/products", handleProductsAPI).Methods("GET")
+	r.HandleFunc("/api/products/new", handleNewProductSubmit).Methods("POST")
 
 	r.HandleFunc("/api/user/new", handleUserAPINew).Methods("POST")
-
-	r.HandleFunc("/api/user", handleUserListAPI).Methods("GET")
+	r.HandleFunc("/api/users", handleUserListAPI).Methods("GET")
 
 	r.HandleFunc("/api/user/{id}", handleUserGetAPI).Methods("GET")
 	r.HandleFunc("/api/user/{id}", handleUserAPIList).Methods("POST")
@@ -83,7 +87,6 @@ func main() {
 func accessControlMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-
 		next.ServeHTTP(w, r)
 	})
 }
