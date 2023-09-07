@@ -24,7 +24,12 @@
           <td class="px-2">
             {{ product.id }}
           </td>
-          <td class="px-2">
+          <td class="px-2 relative">
+            <div
+                class="absolute h-full w-full left-0 right-0 bg-bunker transition-all opacity-0 hover:opacity-50 flex items-center justify-center"
+                @click="pData.image.selProduct=product">
+              <i class="ri-image-add-line text-white"></i>
+            </div>
             <img class="max-h-20 w-full h-full object-cover"
                  src="https://picsum.photos/600">
           </td>
@@ -71,9 +76,6 @@
               </Button>
             </div>
             <div class="space-y-2">
-              <Button class="bg-gray-400 hover:bg-gray-500 active:bg-gray-600">
-                <i class="ri-image-line"></i>
-              </Button>
               <Button class="bg-red-500 hover:bg-red-600 active:bg-red-700">
                 <i class="ri-delete-bin-line"></i>
               </Button>
@@ -106,9 +108,9 @@
             <input type="number" step="1" class="min-w-0 w-full">
           </td>
           <td class="px-2 flex gap-2">
-              <Button class="bg-green-500 hover:bg-green-600 active:bg-green-700 my-3">
-                Save
-              </Button>
+            <Button class="bg-green-500 hover:bg-green-600 active:bg-green-700 my-3">
+              Save
+            </Button>
           </td>
         </tr>
         </tbody>
@@ -117,6 +119,16 @@
         An error occurred.
       </Container>
     </transition>
+  </div>
+  <div
+      class="absolute top-0 left-0 bottom-0 right-0 backdrop-blur bg-bunker bg-opacity-50 flex items-center justify-center"
+      v-if="pData.image.selProduct">
+    <Container class="">
+      <input type="file" accept="image/jpeg, image/png" class="min-w-0 w-full" @change="onImagePicked">
+      <Button @click="saveImage(pData.image.selProduct, pData.image.imageData)"
+              class="bg-green-500 hover:bg-green-600 active:bg-green-700">Save
+      </Button>
+    </Container>
   </div>
 </template>
 
@@ -129,9 +141,21 @@ import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import Button from "@/components/Button.vue";
 
-const pData: { products: Product[] | undefined, loading: boolean } = reactive({
+const pData: {
+  products: Product[] | undefined,
+  loading: boolean,
+  image: {
+    selProduct: Product | undefined,
+    imageData: string
+  }
+} = reactive({
   products: undefined,
   loading: true,
+
+  image: {
+    selProduct: undefined,
+    imageData: "",
+  }
 })
 
 /**
@@ -156,14 +180,36 @@ const store = useStore();
 const router = useRouter();
 
 
-function productChanged(product:Product){
-  
+function productChanged(product: Product) {
+
+}
+
+async function saveImage(product: Product, imageData: string) {
+  try {
+    await product.saveImage(imageData);
+  }catch (e){
+    console.log(e)
+  }
+  pData.image.selProduct=undefined
+  loadProducts();
+}
+
+function onImagePicked(e){
+  const files = e.target.files
+  let filename = files[0].name
+  const fileReader = new FileReader()
+  fileReader.addEventListener('load', () => {
+    if(fileReader.result!==null)
+      //@ts-ignore
+      pData.image.imageData = fileReader.result
+  })
+  fileReader.readAsBinaryString(files[0])
 }
 
 </script>
 
 <style scoped>
-input{
+input {
   @apply rounded bg-lgray-800 border border-lgray focus:border-primary text-white px-2 py-1 my-3
 }
 </style>

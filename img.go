@@ -93,3 +93,43 @@ func handleImage(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 	w.Write(img)
 }
+
+func handlePutImageAPI(w http.ResponseWriter, r *http.Request) {
+	var uuid = uuid.New()
+
+	// read image from req body
+	b, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Printf("failed to read body for uuid: %s", err)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(400)
+		fmt.Fprint(w, "{\"error\":\"failed to read body.\"}")
+		return
+	}
+
+	_, mime, err := image.Decode(bytes.NewReader(b))
+	if err != nil && mime != "" {
+		log.Printf("failed to decode image: %s", err)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(400)
+		fmt.Fprint(w, "{\"error\":\"failed to decode image.\"}")
+		return
+	}
+
+	err = setImage(uuid, mime, b)
+	if err != nil {
+		log.Printf("failed to put image into db: %s", err)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(400)
+		fmt.Fprint(w, "{\"error\":\"failed to write image to db.\"}")
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	fmt.Fprintf(w, "{\"bytes\": %d, \"uuid\":\"%s\", \"mime\": \"%s\", \"info\": \"success\"}", len(b), uuid, mime)
+}

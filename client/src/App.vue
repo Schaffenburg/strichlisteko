@@ -22,7 +22,8 @@
       </div>
     </div>
   </div>
-  <router-view class="pt-16"/>
+  <div class="pt-20"><router-view/></div>
+
 </template>
 
 <script setup lang="ts">

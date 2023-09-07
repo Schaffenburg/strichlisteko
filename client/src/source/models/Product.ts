@@ -55,6 +55,17 @@ export default class Product {
         return false;
     }
 
+    public async saveImage(imageData:string){
+        const api = new Api();
+        const resp = await api.saveImage(imageData);
+        if(resp.data){
+            if(resp.data.info){
+                //TODO: now write new image uuid to product object
+                return true
+            }
+        }
+        return false;
+    }
 
 
 }

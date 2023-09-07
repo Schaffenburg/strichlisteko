@@ -40,6 +40,10 @@ func main() {
 
 	r.HandleFunc("/user/new", handleNewUserSubmit).Methods("POST")
 
+	//API START
+	r.HandleFunc("/api/img/{image}", handleImage).Methods("GET")
+	r.HandleFunc("/api/img/new", handlePutImageAPI).Methods("POST")
+
 	r.HandleFunc("/api/storage", handleProductsAPIList).Methods("GET")
 	r.HandleFunc("/api/storage/new", handleProductsAPINew).Methods("POST")
 	r.HandleFunc("/api/storage/new", PreflightRoot).Methods("OPTIONS")
@@ -58,6 +62,8 @@ func main() {
 
 	r.HandleFunc("/api/user/{id}/transactions", handleTransactionAPI).Methods("GET")
 	r.HandleFunc("/api/user/{id}/transactions", handleTransactionAPIPost).Methods("POST")
+
+	//API END
 
 	r.HandleFunc("/user/{id}", handleUserPage).Methods("GET")
 	r.HandleFunc("/user/{id}/buy/{product}", handleBuy).Methods("GET")
