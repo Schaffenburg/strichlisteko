@@ -30,7 +30,7 @@ func openDB() {
 	if err != nil {
 		log.Fatalf("Failed to open DB: %s", err)
 	}
-
+	//fix for mariadb < v10.7.x changed UUID to VARCHAR(36)
 	_, err = DB.Exec(`CREATE TABLE IF NOT EXISTS products (
 	    id INT AUTO_INCREMENT PRIMARY KEY,
 	    name TEXT NOT NULL,
@@ -39,7 +39,7 @@ func openDB() {
 	    price INT NOT NULL,
 	    box_size INT NOT NULL,
 	    amount VARCHAR(10) NOT NULL,
-	    image UUID NOT NULL,
+    	image VARCHAR(36) NOT NULL,
 	    note TEXT NOT NULL
 	);`)
 	if err != nil {
@@ -49,7 +49,7 @@ func openDB() {
 	_, err = DB.Exec(`CREATE TABLE IF NOT EXISTS users (
 	    userid INT AUTO_INCREMENT PRIMARY KEY,
 	    username VARCHAR(255) UNIQUE KEY,
-	    image UUID NOT NULL,
+	    image VARCHAR(36) NOT NULL,
 	    balance INT NOT NULL,
 	    active BOOL NOT NULL
 	);`)
@@ -70,7 +70,7 @@ func openDB() {
 	}
 
 	_, err = DB.Exec(`CREATE TABLE IF NOT EXISTS images (
-	    image_id UUID PRIMARY KEY,
+	    image_id VARCHAR(36) PRIMARY KEY,
 	    image MEDIUMBLOB NOT NULL,
 	    mime VARCHAR(25) NOT NULL
 	);`)

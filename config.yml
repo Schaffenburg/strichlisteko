@@ -1,2 +1,2 @@
 db.driver: "mysql"
-db.source: "strichliste:password@/strichliste"
+db.source: "flexu_strichliste_test:y&KrjX8K#Af2@tcp(kh01.akazia.eu)/flexu_strichliste_test"
